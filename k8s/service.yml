@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: croplands-api
+  namespace: croplands
+spec:
+  selector:
+    app: croplands-api
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: 8000
+

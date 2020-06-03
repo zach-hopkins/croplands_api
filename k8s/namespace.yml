@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: croplands
+  labels:
+    app: croplands
+  annotations:
+    field.cattle.io/projectId: "c-h587h:p-c5vsp"
+
+

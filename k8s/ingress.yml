@@ -1,0 +1,32 @@
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: croplands-api
+  namespace: croplands
+  labels:
+    app: croplands-api
+spec:
+  tls:
+    - secretName: api-croplands-org-tls
+      hosts: 
+        - api.croplands.org
+
+    - secretName: server-croplands-tls
+      hosts: 
+        - server.croplands.org
+  rules:
+    - host: api.croplands.org
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: croplands-api
+              servicePort: http
+
+    - host: server.croplands.org
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: croplands-api
+              servicePort: http

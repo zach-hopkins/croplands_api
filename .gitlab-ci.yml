@@ -1,0 +1,51 @@
+stages:
+  - build
+  - test
+  - deploy
+
+variables:
+  REGISTRY_SERVER: dk8s-registry.wr.usgs.gov
+  IMAGE_TAG: $REGISTRY_SERVER/croplands-api:latest
+
+build:
+  stage: build
+  image: docker:stable
+  services:
+    - name: usgsastro/dind
+      alias: docker
+  tags:
+    - dind
+    - dmz
+  script:
+    - docker login -u $DK8S_REGISTRY_USER -p $DK8S_REGISTRY_PWD $REGISTRY_SERVER
+    - docker build --pull -t $IMAGE_TAG .
+    - docker push $IMAGE_TAG
+  only:
+    changes:
+      - Dockerfile
+      - croplands-api/**
+
+test:
+  image: usgsastro/kube
+  stage: test
+  tags:
+    - dmz
+  script:
+    - mkdir ~/.kube
+    - echo "$DK8S_CONFIG" > ~/.kube/config
+    - kubectl config set-context --current --namespace croplands
+    - kubectl apply --dry-run=client -f k8s/
+
+deploy:
+  image: usgsastro/kube
+  stage: deploy
+  tags:
+    - dmz
+  script:
+    - mkdir ~/.kube
+    - echo "$DK8S_CONFIG" > ~/.kube/config
+    - kubectl config set-context --current --namespace croplands
+    - kubectl apply -f k8s/
+    - kubectl delete po -l app=croplands-api
+  only:
+    - master

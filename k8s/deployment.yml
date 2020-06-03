@@ -1,0 +1,29 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: croplands-api
+  namespace: croplands
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: croplands-api
+  # Pod template
+  template:
+    metadata:
+      labels:
+        app: croplands-api
+    spec:
+      imagePullSecrets:
+        - name: dk8s-registry
+      containers:
+        - name: croplands-api
+          image: dk8s-registry.wr.usgs.gov/croplands-api:latest
+          ports: 
+            - containerPort: 8000
+          envFrom:
+            - secretRef:
+                name: croplands-secrets
+ 

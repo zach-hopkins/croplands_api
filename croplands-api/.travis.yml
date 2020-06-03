@@ -1,0 +1,16 @@
+language: python
+python:
+- '2.7'
+
+services:
+- redis-server
+
+before_script:
+- psql -c 'create database croplands_test;' -U postgres
+- psql -c 'CREATE EXTENSION postgis;' -U postgres -d croplands_test
+- psql -c 'CREATE EXTENSION postgis_topology;' -U postgres -d croplands_test
+
+install:
+ - pip install tox
+
+script: tox
