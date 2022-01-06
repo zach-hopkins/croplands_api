@@ -14,7 +14,7 @@ Pillow<=6.2.2
 Shapely
 beautifulsoup4
 boto
-celery==3.1.23
+celery==5.2.2
 earthengine-api==0.1.168
 geopy
 gevent==1.1.2
